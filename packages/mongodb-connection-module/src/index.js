@@ -20,3 +20,13 @@ db.on('error', (err) => {
 
 db.once('open', () => logger.info(`[pl-mongodb-connection-module]: Connection opened with the DB`))
 db.on('connected', () => logger.info(`[pl-mongodb-connection-module]: Mongoose connection is opened it`))
+db.on('disconnected', () => logger.info('[pl-mongodbconnection-module]: Mongoose connection is disconned'));
+
+process.on('SIGINT', () => {
+  db.close(() => {
+    logger.info('[pl-mongodbconnection-module]: Mongo connection has been disconnected due to application termination');
+    process.exit(1);
+  });
+});
+
+module.exports = db;
